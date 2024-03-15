@@ -1,0 +1,87 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Wizard Score Keeper">
+    <div class="hero min-h-full">
+        <div id="wrapper" class="hero-content text-center flex flex-col">
+            <h2 class="text-2xl">Please select player names:</h2>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const playerCount = parseInt(urlParams.get("p") || "4") || 4;
+    const wrapper = document.getElementById("wrapper") as HTMLDivElement;
+
+    for (let i = 0; i < playerCount; i++) {
+        const player = document.createElement("label");
+        player.classList.add(
+            "input",
+            "input-bordered",
+            "flex",
+            "items-center",
+            "gap-2"
+        );
+        player.innerHTML = `<input type="text" class="grow" placeholder="Player ${i + 1}" />`;
+        player.querySelector("input")?.addEventListener("input", checkValid);
+        wrapper.appendChild(player);
+    }
+
+    const info = document.createElement("p");
+    info.classList.add("text-md", "text-error", "mt-2");
+    wrapper.appendChild(info);
+
+    const submit = document.createElement("button");
+    submit.classList.add(
+        "btn",
+        "btn-success",
+        "btn-disabled",
+        "w-2/3",
+        "mx-auto"
+    );
+    submit.innerHTML = "Start Game";
+    submit.addEventListener("click", start);
+    wrapper.appendChild(submit);
+
+    function start() {
+        const inputs = wrapper.querySelectorAll("input");
+        const players: string[] = [];
+        for (const input of inputs) {
+            players.push(input.value);
+        }
+        window.location.href = `/wizard?players=${players.join(",")}`;
+    }
+
+    function checkValid() {
+        const inputs = wrapper.querySelectorAll("input");
+        const seen = new Set();
+        let valid = true;
+        let reasaon = "";
+        for (const input of inputs) {
+            if (input.value === "") {
+                valid = false;
+                reasaon = "Please enter a name for each player";
+                break;
+            }
+            if (seen.has(input.value)) {
+                valid = false;
+                reasaon = "Please enter unique names for each player";
+                break;
+            }
+            seen.add(input.value);
+        }
+        if (valid) {
+            submit.classList.remove("btn-disabled");
+            info.textContent = "everything looks good!";
+            info.classList.add("opacity-0");
+        } else {
+            submit.classList.add("btn-disabled");
+            info.classList.remove("opacity-0");
+            info.textContent = reasaon;
+        }
+    }
+    checkValid();
+</script>

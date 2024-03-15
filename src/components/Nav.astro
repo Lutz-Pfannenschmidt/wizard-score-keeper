@@ -1,0 +1,16 @@
+---
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import Logo from "../icons/Logo.astro";
+---
+
+<div class="navbar bg-base-100">
+    <div class="flex-1">
+        <a href="/" class="btn btn-ghost text-xl">
+            <Logo />
+            Wizard Score Keeper
+        </a>
+    </div>
+    <div class="flex-none p-2">
+        <ThemeSwitcher />
+    </div>
+</div>
