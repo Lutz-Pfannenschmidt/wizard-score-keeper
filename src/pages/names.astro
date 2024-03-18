@@ -52,7 +52,7 @@ import Layout from "../layouts/Layout.astro";
         for (const input of inputs) {
             players.push(input.value);
         }
-        window.location.href = `/wizard?players=${players.join(",")}`;
+        window.location.href = `/wizard-score-keeper/wizard?players=${players.join(",")}`;
     }
 
     function checkValid() {
